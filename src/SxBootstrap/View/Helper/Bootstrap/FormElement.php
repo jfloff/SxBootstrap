@@ -243,7 +243,7 @@ class FormElement extends ZendFormElement
      * @param string $controlWrapper
      * @return string
      */
-    public function render(ElementInterface $element, $groupWrapper = null, $controlWrapper = null)
+    public function render(ElementInterface $element, array $displayOptions = array(), $groupWrapper = null, $controlWrapper = null)
     {
         $labelHelper        = $this->getLabelHelper();
         $escapeHelper       = $this->getEscapeHtmlHelper();

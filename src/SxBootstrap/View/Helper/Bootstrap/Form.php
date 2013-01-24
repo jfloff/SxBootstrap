@@ -108,15 +108,17 @@ class Form extends AbstractHelper
      * @param Traversable $fieldset
      * @return void
      */
-    public function render(Traversable $fieldset)
+    public function render(Traversable $fieldset, array $displayOptions = array())
     {
         $form = '';
         $elementHelper = $this->getElementHelper();
         foreach ($fieldset as $element) {
+            $elementId = $element->getAttribute('id');
+            $display = isset($displayOptions[$elementId]) ? $displayOptions[$elementId] : array();
             if ($element instanceof Fieldset) {
-                $form .= $this->renderFieldset($element);
+                $form .= $this->renderFieldset($element, $display);
             } elseif ($element instanceof ElementInterface) {
-                $form .= $elementHelper->render($element);
+                $form .= $elementHelper->render($element, $display);
             }
         }
         return $form;
@@ -128,7 +130,7 @@ class Form extends AbstractHelper
      * @param Zend\Form\Fieldset $fieldset
      * @return void
      */
-    public function renderFieldset(Fieldset $fieldset)
+    public function renderFieldset(Fieldset $fieldset, array $displayOptions = array())
     {
         $id = $fieldset->getAttribute('id') ?: $fieldset->getName();
         return '<fieldset id="fieldset-' . $id . '">'
