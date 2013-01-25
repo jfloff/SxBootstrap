@@ -236,6 +236,30 @@ class FormElement extends ZendFormElement
     }
 
     /**
+     * Renders displayOptions into element html
+     * @param  string $elementHtml
+     * @param  array  $displayOptions
+     * @return string
+     */
+    private function displayOptionsIntoElement($elementHtml, array $displayOptions) {
+        $html = "";
+        if(!empty($displayOptions)){
+            // display options to insert
+            foreach ($displayOptions as $attr => $value) {
+                $html .= $attr . '="' . $value . '"';
+            }
+            // insert display options after html element tag
+            $firstSpace = strpos($elementHtml, ' ') + 1;
+            $html = substr($elementHtml, 0, $firstSpace) . $html . substr($elementHtml, $firstSpace);
+        }
+        else {
+            $html = $elementHtml;
+        }
+
+        return $html;
+    }
+
+    /**
      * Render
      *
      * @param Zend\Form\ElementInterface $element
@@ -284,7 +308,7 @@ class FormElement extends ZendFormElement
         $html .= sprintf(
             $controlWrapper,
             $id,
-            $elementHelper->render($element),
+            $this->displayOptionsIntoElement($elementHelper->render($element), $displayOptions),
             $descriptionHelper->render($element),
             $elementErrorHelper->render($element)
         );

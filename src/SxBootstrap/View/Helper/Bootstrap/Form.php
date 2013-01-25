@@ -125,6 +125,24 @@ class Form extends AbstractHelper
     }
 
     /**
+     * Removes fieldset display options, leaving only
+     * the fieldset elements options.
+     * @param  array  $displayOptions display options for fieldset
+     * @return array                  specific fieldset display options
+     */
+    private function removeFieldsetDisplayOptions(array &$displayOptions)
+    {
+        $fieldsetDisplayOptions = array();
+        foreach ($displayOptions as $key => $value) {
+            if (!is_array($value)){
+                $fieldsetDisplayOptions[$key] = $value;
+                unset($displayOptions[$key]);
+            }
+        }
+        return $fieldsetDisplayOptions;
+    }
+
+    /**
      * Render a Fieldset
      *
      * @param Zend\Form\Fieldset $fieldset
@@ -132,9 +150,11 @@ class Form extends AbstractHelper
      */
     public function renderFieldset(Fieldset $fieldset, array $displayOptions = array())
     {
+        $fieldsetDisplayOptions = $this->removeFieldsetDisplayOptions($displayOptions);
+        // missing display options rendering for fieldset
         $id = $fieldset->getAttribute('id') ?: $fieldset->getName();
         return '<fieldset id="fieldset-' . $id . '">'
-            . $this->render($fieldset)
+            . $this->render($fieldset, $displayOptions)
             . '</fieldset>';
     }
 }
