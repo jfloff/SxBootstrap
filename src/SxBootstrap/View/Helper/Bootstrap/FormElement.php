@@ -236,30 +236,6 @@ class FormElement extends ZendFormElement
     }
 
     /**
-     * Renders displayOptions into element html
-     * @param  string $elementHtml
-     * @param  array  $displayOptions
-     * @return string
-     */
-    private function displayOptionsIntoElement($elementHtml, array $displayOptions) {
-        $html = "";
-        if(!empty($displayOptions)){
-            // display options to insert
-            foreach ($displayOptions as $attr => $value) {
-                $html .= $attr . '="' . $value . '"';
-            }
-            // insert display options after html element tag
-            $firstSpace = strpos($elementHtml, ' ') + 1;
-            $html = substr($elementHtml, 0, $firstSpace) . $html . substr($elementHtml, $firstSpace);
-        }
-        else {
-            $html = $elementHtml;
-        }
-
-        return $html;
-    }
-
-    /**
      * Render
      *
      * @param Zend\Form\ElementInterface $element
@@ -297,6 +273,9 @@ class FormElement extends ZendFormElement
             $html .= $labelHelper->closeTag();
         }
 
+        // $attr = $element->getAttribute('type');
+        // var_dump($attr);
+
         if (method_exists($renderer, 'plugin')) {
             if ($element instanceof \Zend\Form\Element\Radio) {
                 $renderer->plugin('form_radio')->setLabelAttributes(array(
@@ -305,10 +284,15 @@ class FormElement extends ZendFormElement
             }
         }
 
+        // sets display otpions attributes into element
+        foreach ($displayOptions as $attr => $value) {
+            $element->setAttribute($attr, $value);
+        }
+
         $html .= sprintf(
             $controlWrapper,
             $id,
-            $this->displayOptionsIntoElement($elementHelper->render($element), $displayOptions),
+            $elementHelper->render($element),
             $descriptionHelper->render($element),
             $elementErrorHelper->render($element)
         );

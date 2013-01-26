@@ -92,11 +92,11 @@ class Form extends AbstractHelper
      * @param Zend\Form\Form $form
      * @return void
      */
-    public function __invoke(ZendForm $form)
+    public function __invoke(ZendForm $form, array $displayOptions = array())
     {
         $form->prepare();
         $html = $this->getFormHelper()->openTag($form);
-        $html .= $this->render($form->getIterator());
+        $html .= $this->render($form->getIterator(), $displayOptions);
         return $html . $this->getFormHelper()->closeTag();
     }
 
@@ -108,13 +108,13 @@ class Form extends AbstractHelper
      * @param Traversable $fieldset
      * @return void
      */
-    public function render(Traversable $fieldset, array $displayOptions = array())
+    public function render(Traversable $fieldset, array $displayOptions)
     {
         $form = '';
         $elementHelper = $this->getElementHelper();
         foreach ($fieldset as $element) {
-            $elementId = $element->getAttribute('id');
-            $display = isset($displayOptions[$elementId]) ? $displayOptions[$elementId] : array();
+            $id = $element->getAttribute('id') ?: $element->getName();
+            $display = isset($displayOptions[$id]) ? $displayOptions[$id] : array();
             if ($element instanceof Fieldset) {
                 $form .= $this->renderFieldset($element, $display);
             } elseif ($element instanceof ElementInterface) {
