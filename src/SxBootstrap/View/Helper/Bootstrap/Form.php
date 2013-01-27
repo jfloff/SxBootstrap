@@ -126,7 +126,7 @@ class Form extends AbstractHelper
 
     /**
      * Removes fieldset display options, leaving only
-     * the fieldset elements options.
+     * the fieldset elements display options.
      * @param  array  $displayOptions display options for fieldset
      * @return array                  specific fieldset display options
      */
@@ -148,10 +148,14 @@ class Form extends AbstractHelper
      * @param Zend\Form\Fieldset $fieldset
      * @return void
      */
-    public function renderFieldset(Fieldset $fieldset, array $displayOptions = array())
+    public function renderFieldset(Fieldset $fieldset, array $displayOptions)
     {
         $fieldsetDisplayOptions = $this->removeFieldsetDisplayOptions($displayOptions);
-        // missing display options rendering for fieldset
+        // sets display otpions attributes into element
+        foreach ($fieldsetDisplayOptions as $attr => $value) {
+            $fieldset->setAttribute($attr, $value);
+        }
+
         $id = $fieldset->getAttribute('id') ?: $fieldset->getName();
         return '<fieldset id="fieldset-' . $id . '">'
             . $this->render($fieldset, $displayOptions)
